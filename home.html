@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>MovieMatch - Find Your Movie</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Permanent+Marker&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/genai": "https://aistudiocdn.com/@google/genai@^1.31.0"
+        }
+      }
+    </script>
+
+    <link rel="stylesheet" href="home.css" />
+  </head>
+  <body class="bg-slate-900 text-white font-sans overflow-hidden">
+    <!-- Header -->
+
+    <header
+      class="fixed top-0 left-0 w-full z-40 p-4 flex justify-between items-center shadow-md"
+    >
+      <a href="index.html" class="flex items-center gap-2">
+        <h1 class="logo text-2xl text-yellow-400 hidden sm:block text-shadow">
+          MovieMatch
+        </h1>
+      </a>
+      <button
+        id="watchlist-toggle"
+        class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full font-bold shadow-lg transition-transform hover:scale-105"
+      >
+        <i data-lucide="list-video" class="w-5 h-5"></i>
+        <span class="hidden md:inline">Watchlist</span>
+        <span
+          id="watchlist-count"
+          class="bg-white text-red-500 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold"
+          >0</span
+        >
+      </button>
+    </header>
+
+    <!-- Main Content -->
+    <div
+      class="relative min-h-screen flex flex-col items-center justify-center p-6 w-full"
+    >
+      <div
+        class="absolute inset-0 z-0 bg-cover bg-center"
+        style="
+          background-image: url('https://plus.unsplash.com/premium_photo-1661420328803-88ad79e74286?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDYxfHx8ZW58MHx8fHx8');
+        "
+      >
+        <div
+          class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/90 backdrop-blur-[2px]"
+        ></div>
+      </div>
+
+      <div class="relative z-10 w-full max-w-lg">
+        <div
+          class="background backdrop-blur-md p-8 rounded-3xl shadow-2xl border border-slate-700/50 relative overflow-hidden"
+        >
+          <div
+            class="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-1 bg-pink-500/50 blur-xl"
+          ></div>
+
+          <h2 class="text-4xl logo text-center mb-2 text-white text-shadow">
+            Find Your Movie!
+          </h2>
+          <p class="text-center text-slate-200 mb-6 text-sm">
+            Enter preferences: actors, mood, trending...
+          </p>
+
+          <form id="preferences-form" class="space-y-5">
+            <div class="space-y-2">
+              <label
+                class="text-yellow-200 text-xs font-bold uppercase tracking-widest ml-1"
+                >Search by Name</label
+              >
+              <input
+                id="input-natural"
+                type="text"
+                placeholder="e.g. Inception..."
+                class="w-full p-4 rounded-xl background border border-slate-600 focus:border-yellow-400 text-white"
+              />
+            </div>
+
+            <div class="flex gap-4">
+              <div class="flex-1 space-y-2">
+                <label
+                  class="text-yellow-200 text-xs font-bold uppercase tracking-widest ml-1"
+                  >Genre</label
+                >
+                <select
+                  id="input-genre"
+                  class="w-full p-3 rounded-xl background border border-slate-600 text-white cursor-pointer"
+                >
+                  <option value="">Any Genre</option>
+                </select>
+              </div>
+              <div class="flex-1 space-y-2">
+                <label
+                  class="text-yellow-200 text-xs font-bold uppercase tracking-widest ml-1"
+                  >Rating</label
+                >
+                <select
+                  id="input-rating"
+                  class="w-full p-3 rounded-xl background border border-slate-600 text-white cursor-pointer"
+                >
+                  <option value="1">1+ Stars</option>
+                  <option value="2">2+ Stars</option>
+                  <option value="3">3+ Stars</option>
+                  <option value="4">4+ Stars</option>
+                  <option value="5">5+ Stars</option>
+                  <option value="6">6+ Stars</option>
+                  <option value="7">7+ Stars</option>
+                  <option value="8">8+ Stars</option>
+                  <option value="9">9+ Stars</option>
+                </select>
+              </div>
+            </div>
+
+            <div
+              class="space-y-4 pt-2 background p-4 rounded-xl border border-slate-700/50"
+            >
+              <div class="flex justify-between items-center">
+                <label
+                  class="text-yellow-200 text-xs font-bold uppercase tracking-widest"
+                  >Year:
+                  <span id="year-display" class="text-yellow-400 text-lg"
+                    >2000</span
+                  >+</label
+                >
+              </div>
+              <input
+                id="input-year"
+                type="range"
+                min="1970"
+                max="2025"
+                step="1"
+                value="2000"
+                class="w-full h-2 bg-slate-700 rounded-lg accent-yellow-500 cursor-pointer"
+              />
+            </div>
+
+            <div class="space-y-2">
+              <label
+                class="text-yellow-200 text-xs font-bold uppercase tracking-widest ml-1"
+                >Mode</label
+              >
+              <div class="grid grid-cols-2 gap-4">
+                <div
+                  class="mode-opt p-3 rounded-xl border border-yellow-500 background text-yellow-400 flex justify-center gap-2 cursor-pointer"
+                  data-mode="swipe"
+                >
+                  <i data-lucide="layers" class="w-4 h-4"></i> Swipe
+                </div>
+                <div
+                  class="mode-opt p-3 rounded-xl border border-slate-700 background flex justify-center gap-2 cursor-pointer"
+                  data-mode="scroll"
+                >
+                  <i data-lucide="grid" class="w-4 h-4"></i> Scroll
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              class="w-full mt-4 bg-gradient-to-r from-yellow-600 to-orange-400 text-white py-4 rounded-xl font-bold text-xl hover:scale-[1.02] transition-transform shadow-lg"
+            >
+              Start Matching
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Watchlist Sidebar -->
+    <div
+      id="watchlist-overlay"
+      class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 hidden opacity-0 transition-opacity"
+    ></div>
+    <aside
+      id="watchlist-sidebar"
+      class="fixed top-0 right-0 h-full w-80 bg-slate-80 text-slate-900 shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col"
+    >
+      <div
+        class="p-6 border-b border-slate-200 flex justify-between items-center bg-gradient-to-r from-yellow-300 to-yellow-500"
+      >
+        <h2 class="logo text-3xl -rotate-2">Watchlist</h2>
+        <button id="watchlist-close">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+      <div
+        id="watchlist-items"
+        class="flex-1 overflow-y-auto p-4 space-y-4"
+      ></div>
+      <div
+        class="p-4 border-t border-slate-80 bg-slate-80 text-center text-xs text-slate-50"
+      >
+        <span id="watchlist-stats">0 / 0 Watched</span>
+      </div>
+    </aside>
+
+    <script type="module" src="home.js"></script>
+  </body>
+</html>

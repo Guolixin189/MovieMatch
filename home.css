@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.logo {
+  font-family: "Permanent Marker", cursive;
+}
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.bg-yellow-gradient {
+  background: linear-gradient(to right, #facc15, #f97316);
+}
+
+.bg-watchlist {
+  background-color: rgba(15, 23, 42, 0.9);
+}
+
+.text-yellow {
+  color: #facc15;
+}
+
+.text-slate {
+  color: #64748b;
+}
+
+.border-yellow {
+  border-color: #facc15;
+}
+
+.border-slate {
+  border-color: #64748b;
+}
+
+.hover-yellow:hover {
+  color: #facc15;
+}
+
+.hover-bg-yellow:hover {
+  background-color: rgba(250, 204, 21, 0.2);
+}
+
+.mode-opt.active {
+  background-color: rgba(255, 213, 89, 0.424);
+  border-color: #ffe72f;
+  color: #f8f5d9;
+  box-shadow: 0 0 15px rgba(255, 193, 58, 0.3);
+}
+
+.background {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.bg-watch {
+  background-color: rgba(208, 208, 200, 0.501);
+}
+
+.watchlist-movie {
+  color: white;
+}
+
+.watchlist-watched {
+  color: yellow;
+  font-weight: bold;
+}
