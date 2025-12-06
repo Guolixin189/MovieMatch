@@ -66,7 +66,7 @@ function updateWatchlistUI() {
   if (!container) return;
 
   if (list.length === 0) {
-    container.innerHTML = `<div class="text-center text-white-400 mt-10"><p>No movies yet.</p></div>`;
+    container.innerHTML = `<div class="text-center text-slate-50 mt-10"><p>No movies yet.</p></div>`;
     return;
   }
 
