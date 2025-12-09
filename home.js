@@ -70,7 +70,7 @@ function setupForm() {
       localStorage.setItem("mm_prefs", JSON.stringify(prefs));
 
       if (selectedMode === "swipe") {
-        window.location.href = "SwipeMode.html";
+        window.location.href = "swipeMode.html";
       } else {
         window.location.href = "scrollMode.html";
       }
