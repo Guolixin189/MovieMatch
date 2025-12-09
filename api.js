@@ -87,9 +87,3 @@ export function getImageUrl(path, size = "w500") {
     : "https://placehold.co/500x750?text=No+Image";
 }
 
-export async function enhanceWithGemini(input) {
-  if (!GENAI_API_KEY || !input) return {};
-  // Simple placeholder for structure.
-  // In a real env with key, we would call generateContent here.
-  return {};
-}
