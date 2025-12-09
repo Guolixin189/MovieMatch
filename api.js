@@ -1,8 +1,5 @@
-import { GoogleGenAI, Type } from "@google/genai";
-
 const API_KEY = "cfc38c3e9ea356a10f7796e40c13efe0";
 const BASE_URL = "https://api.themoviedb.org/3";
-const GENAI_API_KEY = "";
 
 export const GENRES = [
   { id: 28, name: "Action" },
