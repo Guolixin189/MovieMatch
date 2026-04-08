@@ -7,6 +7,32 @@ REPLACE-THIS-TEXT-WITH-YOUR-PARTNERS-NAME-STUDENT-ID-AND-GITHUB-USERNAME
 
 <br><br><br>
 
+MovieMatch 
+MovieMatch is a full-stack web application designed to help users discover, organize, and share movies. Built using MongoDB, Express, React, Node.js, the app pulls real movie data using the TMDB or IMDb API.
+Users can register for an account and browse movies in two distinct ways: a traditional scrolling feed, and an interactive, Tinder-style swipe view (swipe right to save, left to skip). Movies you like can be organized into multiple custom watchlists, where you can easily delete entries or mark them as "watched."
+For the advanced features, the app includes an AI-powered search function. Users can type natural language prompts (like "mind-bending sci-fi with a plot twist"), and the AI will extract keywords to find the perfect movie match. Additionally, the app includes a light social feature where users can publish their watchlists to a public channel, allowing others to browse and like their collections.
+
+Rubric
+Approved by Cheng
+Rubric turned in on time (5 points)
+5 - Checked by TA
+Languages/Frameworks used (30 points)
+10 - Learned/Used React frontend
+10 - Learned/Used Node/Express backend
+10 - Learned/Used MongoDB database
+Functionality (40 points)
+5 - Users can register, login, and logout
+5 - Users can create, rename, and delete multiple watchlists
+5 - Users can add and remove movies from watchlists
+5 - Users can mark saved movies as watched
+10 - Fetches and displays real movie data from TMDB or IMDb API
+10 - Database correctly stores users, watchlists, saved movie IDs, and watched status
+Creative Portion (20 points)
+Best Practices (5 points)
+3 - Code is readable and well-formatted
+2 - All pages pass the HTML validator
+
+
 
  # AI Reflection
 Answer the following questions below
