@@ -1,8 +1,7 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/GCBfbKeb)
 # CSE3300 Creative Project
-REPLACE-THIS-TEXT-WITH-YOUR-NAME-STUDENT-ID-AND-GITHUB-USERNAME
-
-REPLACE-THIS-TEXT-WITH-YOUR-PARTNERS-NAME-STUDENT-ID-AND-GITHUB-USERNAME
+Lixin Guo 525626 Section02 Guolixin189
+Nachuan Ding 605549 Section02 dingn0823
 
 
 <br><br><br>
