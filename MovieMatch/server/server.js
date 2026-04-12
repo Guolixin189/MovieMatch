@@ -16,7 +16,7 @@ app.use(express.json());
 const protect = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ message: "未授权：缺少通行证" });
+    return res.status(401).json({ message: "Not Authorized" });
   }
 
   const token = authHeader.split(" ")[1];
@@ -25,7 +25,7 @@ const protect = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    return res.status(401).json({ message: "未授权：通行证无效或已过期" });
+    return res.status(401).json({ message: "Not Authorized" });
   }
 };
 
@@ -87,7 +87,6 @@ app.post("/api/auth/login", async (req, res) => {
   }
 });
 
-// 1. 获取用户所有的清单列表 (用于侧边栏显示)
 app.get("/api/watchlists", protect, async (req, res) => {
   try {
     const lists = await Watchlist.find({ owner: req.user.userId });
@@ -198,6 +197,46 @@ app.delete(
       res.json({ message: "Delete Success" });
     } catch (error) {
       res.status(500).json({ error: "Delete Fail" });
+    }
+  },
+);
+
+app.put(
+  "/api/watchlists/:listId/movies/:movieId/watched",
+  protect,
+  async (req, res) => {
+    try {
+      const { listId, movieId } = req.params;
+
+      const list = await Watchlist.findOne({
+        _id: listId,
+        owner: req.user.userId,
+      });
+
+      if (!list) {
+        return res.status(404).json({ message: "Cannot Find Such Watchlist" });
+      }
+
+      const movieIndex = list.movies.findIndex(
+        (m) => m.id.toString() === movieId.toString(),
+      );
+
+      if (movieIndex === -1) {
+        return res.status(404).json({ message: "Movie Not in Watchlist" });
+      }
+
+      list.movies[movieIndex].watched = !list.movies[movieIndex].watched;
+
+      list.markModified("movies");
+      await list.save();
+
+      res.json({
+        message: "Update Success",
+        watched: list.movies[movieIndex].watched,
+      });
+    } catch (error) {
+      console.error("❌ Update Watched Status Error:", error);
+      res.status(500).json({ error: "Fail to Update Watch Status" });
     }
   },
 );
