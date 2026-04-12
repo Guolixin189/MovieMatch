@@ -15,30 +15,25 @@ api.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-
 export const getAllWatchlists = async () => {
   const response = await api.get("/watchlists");
   return response.data;
 };
-
 
 export const createWatchlist = async (name) => {
   const response = await api.post("/watchlists", { name });
   return response.data;
 };
 
-
 export const getMoviesByListId = async (listId) => {
   const response = await api.get(`/watchlists/${listId}`);
   return response.data;
 };
 
-
 export const addToWatchlist = async (movie) => {
   const response = await api.post("/watchlist", movie);
   return response.data;
 };
-
 
 export const moveMovie = async (movieId, fromListId, toListId) => {
   const response = await api.post("/watchlists/move", {
@@ -49,12 +44,12 @@ export const moveMovie = async (movieId, fromListId, toListId) => {
   return response.data;
 };
 
-
-export const toggleWatchedStatus = async (movieId) => {
-  const response = await api.put(`/watchlist/${movieId}`);
+export const toggleWatchedStatus = async (listId, movieId) => {
+  const response = await api.put(
+    `/watchlists/${listId}/movies/${movieId}/watched`,
+  );
   return response.data;
 };
-
 
 export const removeFromList = async (listId, movieId) => {
   const response = await api.delete(`/watchlists/${listId}/movie/${movieId}`);
@@ -66,12 +61,10 @@ export const getPublicWatchlists = async () => {
   return response.data;
 };
 
-
 export const toggleShareWatchlist = async (listId) => {
   const response = await api.put(`/watchlists/${listId}/share`);
   return response.data;
 };
-
 
 export const toggleLikeWatchlist = async (listId) => {
   const response = await api.put(`/community/watchlists/${listId}/like`);
