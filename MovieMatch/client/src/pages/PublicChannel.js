@@ -5,7 +5,6 @@ const PublicChannel = () => {
   const [publicLists, setPublicLists] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // 🌟 新增：用来控制“查看详情”弹窗的状态。null 表示关闭，有数据表示打开
   const [selectedList, setSelectedList] = useState(null);
 
   useEffect(() => {
@@ -40,7 +39,6 @@ const PublicChannel = () => {
     );
 
   return (
-    // 注意这里加了 relative，为了给弹窗做定位参照
     <div className="h-full overflow-y-auto p-8 bg-slate-950 relative">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-4xl font-bold text-white mb-2 font-[Permanent_Marker]">
@@ -78,7 +76,6 @@ const PublicChannel = () => {
                 </button>
               </div>
 
-              {/* 预览清单中的前三部电影海报 */}
               <div className="flex -space-x-4 mb-6 overflow-hidden">
                 {list.movies.slice(0, 4).map((movie, idx) => (
                   <img
@@ -103,7 +100,6 @@ const PublicChannel = () => {
                 <span className="text-xs text-slate-500">
                   {list.movies.length} Movies
                 </span>
-                {/* 🌟 修复：绑定 onClick 事件，点击时把当前 list 存入 state */}
                 <button
                   onClick={() => setSelectedList(list)}
                   className="text-sm font-bold text-yellow-500 hover:underline cursor-pointer"
@@ -116,18 +112,14 @@ const PublicChannel = () => {
         </div>
       </div>
 
-      {/* 🌟 新增：全屏详情弹窗 (Modal) */}
       {selectedList && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
-          {/* 模糊背景遮罩，点击遮罩也能关闭弹窗 */}
           <div
             className="absolute inset-0 bg-black/80 backdrop-blur-sm cursor-pointer"
             onClick={() => setSelectedList(null)}
           ></div>
 
-          {/* 弹窗主体 */}
           <div className="relative bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-5xl h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-fade-in-up">
-            {/* 弹窗头部 */}
             <div className="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900 shrink-0">
               <div>
                 <h2 className="text-3xl font-bold text-white mb-1">
@@ -149,7 +141,6 @@ const PublicChannel = () => {
               </button>
             </div>
 
-            {/* 弹窗滚动内容区：电影网格 */}
             <div className="flex-1 overflow-y-auto p-6 scroll-smooth bg-slate-950">
               {selectedList.movies.length === 0 ? (
                 <div className="h-full flex items-center justify-center text-slate-500 italic">

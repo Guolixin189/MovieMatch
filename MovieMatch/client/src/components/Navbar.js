@@ -7,7 +7,6 @@ const Navbar = ({ user, onLogout }) => {
 
   return (
     <header className="fixed top-0 w-full z-50 bg-slate-950/90 backdrop-blur-md border-b border-slate-800 px-6 py-3 flex justify-between items-center shadow-md">
-      {/* ⬅️ 左侧：唯一 Logo */}
       <div
         className="font-[Permanent_Marker] text-3xl text-yellow-500 -rotate-2 cursor-pointer hover:scale-105 transition-transform"
         onClick={() => navigate("/")}
@@ -15,11 +14,8 @@ const Navbar = ({ user, onLogout }) => {
         MovieMatch
       </div>
 
-      {/* ➡️ 右侧：功能与用户区 */}
       <div className="flex items-center gap-6">
-        {/* 1. 核心控制区：Community广场 + Swipe/Scroll发现 + 红色收藏夹 */}
         <div className="flex items-center gap-4">
-          {/* 🌟 新增：Community 按钮 */}
           <button
             onClick={() => navigate("/community")}
             className={`flex items-center gap-2 px-4 py-1.5 rounded-full font-bold text-sm transition-all border ${
@@ -67,7 +63,6 @@ const Navbar = ({ user, onLogout }) => {
           </button>
         </div>
 
-        {/* 2. 用户信息区 */}
         <div className="flex flex-col items-end border-l border-slate-700 pl-6">
           <span className="text-sm font-bold text-slate-200">
             Hi, {user.username}!

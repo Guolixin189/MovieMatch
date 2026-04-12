@@ -74,12 +74,11 @@ const Home = () => {
           </h1>
         </Link>
         <button
-          onClick={() => setIsWatchlistOpen(true)} // 👉 绑定点击事件打开抽屉
+          onClick={() => setIsWatchlistOpen(true)}
           className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full font-bold shadow-lg transition-transform hover:scale-105"
         >
           <ListVideo size={20} />
           <span className="hidden md:inline">Watchlist</span>
-          {/* 👉 动态显示收藏夹里的电影数量 */}
           <span className="bg-white text-red-500 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
             {watchlistCount}
           </span>

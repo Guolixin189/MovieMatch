@@ -53,9 +53,8 @@ const Swipe = () => {
 
     if (actionType === "save") {
       try {
-        // 🌟 核心修复：数据减肥，只传后端需要的字段，避免 413 错误！
         const movieToSave = {
-          id: currentMovie.id, // 必须叫 id
+          id: currentMovie.id,
           title: currentMovie.title,
           poster_path: currentMovie.poster_path,
           overview: currentMovie.overview,
@@ -98,7 +97,6 @@ const Swipe = () => {
             transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
           }}
         >
-          {/* 正面 */}
           <div
             className="absolute top-0 left-0 w-full h-full rounded-2xl overflow-hidden bg-slate-800"
             style={{
@@ -117,7 +115,6 @@ const Swipe = () => {
               </h2>
             </div>
           </div>
-          {/* 背面 */}
           <div
             className="absolute top-0 left-0 w-full h-full rounded-2xl bg-slate-900 border border-slate-700 p-6 flex flex-col overflow-y-auto no-scrollbar"
             style={{

@@ -33,7 +33,10 @@ const Auth = ({ onLoginSuccess }) => {
         setPassword("");
       }
     } catch (err) {
-      setError(err.response?.data?.message || "服务器连接失败，请重试");
+      setError(
+        err.response?.data?.message ||
+          "Server Connection Error, Please Try Again",
+      );
     } finally {
       setIsLoading(false);
     }

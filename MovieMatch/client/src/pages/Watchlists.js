@@ -10,12 +10,11 @@ import {
 } from "../utils/backendApi";
 
 const Watchlists = () => {
-  const [lists, setLists] = useState([]); // 所有清单
-  const [activeListId, setActiveListId] = useState(null); // 当前选中的清单 ID
-  const [movies, setMovies] = useState([]); // 当前清单里的电影
+  const [lists, setLists] = useState([]);
+  const [activeListId, setActiveListId] = useState(null);
+  const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // 1. 初始化：获取所有清单
   useEffect(() => {
     loadInitialData();
   }, []);
@@ -34,7 +33,6 @@ const Watchlists = () => {
     }
   };
 
-  // 2. 当切换清单时，拉取该清单的电影
   useEffect(() => {
     if (activeListId) {
       fetchMovies(activeListId);
@@ -50,7 +48,6 @@ const Watchlists = () => {
     }
   };
 
-  // 3. 处理新建清单
   const handleCreateList = async () => {
     const name = window.prompt("Enter new list name (e.g., Action, Sci-Fi):");
     if (!name) return;
@@ -63,11 +60,10 @@ const Watchlists = () => {
     }
   };
 
-  // 4. 处理移动电影
   const handleMove = async (movieId, toListId) => {
     try {
       await moveMovie(movieId, activeListId, toListId);
-      fetchMovies(activeListId); // 刷新当前列表
+      fetchMovies(activeListId);
     } catch (err) {
       alert("Move failed");
     }
@@ -82,7 +78,6 @@ const Watchlists = () => {
 
   return (
     <div className="h-full flex flex-col md:flex-row overflow-hidden bg-slate-950 text-slate-200">
-      {/* ⬅️ 动态侧边栏 */}
       <div className="w-full md:w-72 bg-slate-900/50 border-r border-slate-800 p-6 flex flex-col shrink-0">
         <h2 className="text-2xl font-bold text-white mb-8 font-[Permanent_Marker] tracking-wider">
           My Library
@@ -119,7 +114,6 @@ const Watchlists = () => {
         </button>
       </div>
 
-      {/* ➡️ 电影展示区 */}
       <div className="flex-1 overflow-y-auto p-8 scroll-smooth">
         <div className="flex justify-between items-end mb-8 border-b border-slate-800 pb-4">
           <div>
@@ -159,7 +153,6 @@ const Watchlists = () => {
                 key={movie.id}
                 className="group relative bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-xl transition-all hover:scale-105 flex flex-col"
               >
-                {/* 海报与状态 */}
                 <div className="aspect-[2/3] relative overflow-hidden bg-slate-900">
                   {movie.watched && (
                     <div className="absolute inset-0 bg-black/50 z-10 flex items-center justify-center pointer-events-none">
@@ -169,7 +162,6 @@ const Watchlists = () => {
                     </div>
                   )}
 
-                  {/* 🌟 修改点 1：悬停时海报放大并轻微模糊，凸显文字 */}
                   <img
                     src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                     className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:blur-[2px] group-hover:brightness-50 ${
@@ -182,14 +174,12 @@ const Watchlists = () => {
                     }}
                   />
 
-                  {/* 🌟 修改点 2：全新的悬浮简介遮罩 */}
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/80 to-transparent p-4 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 pointer-events-none">
                     <p className="text-xs text-slate-300 line-clamp-[8] leading-relaxed mb-2 text-shadow-sm">
                       {movie.overview || "No overview available."}
                     </p>
                   </div>
 
-                  {/* ⚡ 悬浮操作菜单 (位于 z-20，保持在遮罩上方并可点击) */}
                   <div className="absolute top-2 right-2 flex flex-col items-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-20">
                     {lists.length > 1 && (
                       <select
@@ -213,9 +203,12 @@ const Watchlists = () => {
                     <div className="flex gap-2 mt-1">
                       <button
                         onClick={() =>
-                          toggleWatchedStatus(movie.id).then(() =>
-                            fetchMovies(activeListId),
-                          )
+                          toggleWatchedStatus(activeListId, movie.id)
+                            .then(() => fetchMovies(activeListId))
+                            .catch((err) => {
+                              console.error(err);
+                              alert("Cannot Update Watch Status");
+                            })
                         }
                         className="w-8 h-8 rounded-full bg-slate-900/80 text-green-400 flex items-center justify-center border border-slate-700 hover:bg-green-500 hover:text-white transition-colors shadow-lg backdrop-blur-md"
                         title="Mark as Watched"

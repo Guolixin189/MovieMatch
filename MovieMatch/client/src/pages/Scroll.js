@@ -25,7 +25,6 @@ const ScrollMovieCard = ({ movie }) => {
   const handleAdd = async (e) => {
     e.stopPropagation();
     try {
-      // 🌟 数据减肥
       const movieToSave = {
         id: movie.id,
         title: movie.title,
@@ -54,7 +53,6 @@ const ScrollMovieCard = ({ movie }) => {
           transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
         }}
       >
-        {/* 正面 */}
         <div
           className="absolute top-0 left-0 w-full h-full rounded-xl overflow-hidden bg-slate-800"
           style={{
@@ -73,7 +71,6 @@ const ScrollMovieCard = ({ movie }) => {
             </span>
           </div>
         </div>
-        {/* 背面 */}
         <div
           className="absolute top-0 left-0 w-full h-full rounded-xl bg-slate-900 border border-slate-700 p-4 flex flex-col overflow-y-auto no-scrollbar"
           style={{
