@@ -16,25 +16,21 @@ const Auth = ({ onLoginSuccess }) => {
     const endpoint = isLogin ? "/api/auth/login" : "/api/auth/signup";
 
     try {
-      // 记得把这里的端口改成你实际运行的后端端口 (5001)
-      const response = await axios.post(`http://localhost:5001${endpoint}`, {
+      const response = await axios.post(endpoint, {
         username,
         password,
       });
 
       if (isLogin) {
-        // 【核心逻辑】：如果是登录，把后端给的通行证存进浏览器保险箱
         const { token, user } = response.data;
         localStorage.setItem("mm_token", token);
-        localStorage.setItem("mm_user", JSON.stringify(user)); // 顺便存一下用户名
+        localStorage.setItem("mm_user", JSON.stringify(user));
 
-        // 通知父组件：登录成功啦！
         onLoginSuccess(user);
       } else {
-        // 如果是注册成功，直接自动切换到登录页面
         alert("🎉 注册成功！请登录。");
         setIsLogin(true);
-        setPassword(""); // 清空密码框让用户重输
+        setPassword("");
       }
     } catch (err) {
       setError(err.response?.data?.message || "服务器连接失败，请重试");
