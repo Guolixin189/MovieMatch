@@ -298,42 +298,6 @@ app.put("/api/community/watchlists/:id/like", protect, async (req, res) => {
   }
 });
 
-app.put("/api/watchlists/:id/rename", protect, async (req, res) => {
-  const { name } = req.body;
-  try {
-    const list = await Watchlist.findOne({
-      _id: req.params.id,
-      owner: req.user.userId,
-    });
-    if (!list) {
-      return res.status(404).json({ message: "Watchlist not found" });
-    }
-
-    list.name = name;
-    await list.save();
-
-    res.json({ message: "Rename Success", list });
-  } catch (error) {
-    res.status(500).json({ error: "Fail to Rename Watchlist" });
-  }
-});
-
-app.delete("/api/watchlists/:id", protect, async (req, res) => {
-  try {
-    const list = await Watchlist.findOneAndDelete({
-      _id: req.params.id,
-      owner: req.user.userId,
-    });
-    if (!list) {
-      return res.status(404).json({ message: "Watchlist not found" });
-    }
-
-    res.json({ message: "Delete Success" });
-  } catch (error) {
-    res.status(500).json({ error: "Fail to Delete Watchlist" });
-  }
-});
-
 const PORT = process.env.PORT || 5001;
 const MONGO_URI = process.env.MONGO_URI;
 

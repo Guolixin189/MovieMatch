@@ -78,12 +78,12 @@ const Watchlists = () => {
     }
 
     const newName = prompt("Enter new name for the watchlist:", currentName);
-    if (!newName || newName.trim() === "") return;
+    if (!newName || newName.trim() === "" || newName === currentName) return;
 
     try {
       await renameWatchlist(id, newName);
       alert("✅ Watchlist renamed successfully!");
-      loadInitialData();
+      loadInitialData(); // 重新加载左侧列表和数据
     } catch (error) {
       console.error(error);
       alert("❌ Failed to rename watchlist.");
@@ -98,15 +98,16 @@ const Watchlists = () => {
 
     if (
       !window.confirm(
-        "Are you sure you want to delete this watchlist? This action cannot be undone.",
+        `Are you sure you want to delete "${currentName}" and all its movies? This action cannot be undone.`,
       )
-    )
+    ) {
       return;
+    }
 
     try {
       await deleteWatchlist(id);
       alert("✅ Watchlist deleted successfully!");
-      loadInitialData();
+      loadInitialData(); // 重新加载数据，会自动跳回第一个列表
     } catch (error) {
       console.error(error);
       alert("❌ Failed to delete watchlist.");
@@ -122,6 +123,7 @@ const Watchlists = () => {
 
   return (
     <div className="h-full flex flex-col md:flex-row overflow-hidden bg-slate-950 text-slate-200">
+      {/* 侧边栏 */}
       <div className="w-full md:w-72 bg-slate-900/50 border-r border-slate-800 p-6 flex flex-col shrink-0">
         <h2 className="text-2xl font-bold text-white mb-8 font-[Permanent_Marker] tracking-wider">
           My Library
@@ -158,11 +160,14 @@ const Watchlists = () => {
         </button>
       </div>
 
+      {/* 主内容区 */}
       <div className="flex-1 overflow-y-auto p-8 scroll-smooth">
         <div className="flex justify-between items-end mb-8 border-b border-slate-800 pb-4">
           <div>
             <h1 className="text-3xl font-bold text-white flex items-center gap-3">
               {lists.find((l) => l._id === activeListId)?.name}
+
+              {/* Public/Private 按钮 */}
               <button
                 onClick={async () => {
                   await toggleShareWatchlist(activeListId);
@@ -178,6 +183,37 @@ const Watchlists = () => {
                   ? "🌍 Public"
                   : "🔒 Private"}
               </button>
+
+              {/* 重命名与删除按钮 (仅非默认列表显示) */}
+              {lists.find((l) => l._id === activeListId)?.name !==
+                "My Watchlist" && (
+                <div className="flex gap-2 ml-2">
+                  <button
+                    onClick={() => {
+                      const currentName = lists.find(
+                        (l) => l._id === activeListId,
+                      )?.name;
+                      handleRenameList(activeListId, currentName);
+                    }}
+                    className="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:bg-yellow-500 hover:text-slate-900 flex items-center justify-center transition-colors text-sm shadow-md"
+                    title="Rename List"
+                  >
+                    ✏️
+                  </button>
+                  <button
+                    onClick={() => {
+                      const currentName = lists.find(
+                        (l) => l._id === activeListId,
+                      )?.name;
+                      handleDeleteList(activeListId, currentName);
+                    }}
+                    className="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:bg-red-500 hover:text-white flex items-center justify-center transition-colors text-sm shadow-md"
+                    title="Delete List"
+                  >
+                    🗑️
+                  </button>
+                </div>
+              )}
             </h1>
           </div>
           <span className="text-slate-500 text-sm font-bold">
@@ -185,6 +221,7 @@ const Watchlists = () => {
           </span>
         </div>
 
+        {/* 电影列表网格 */}
         {movies.length === 0 ? (
           <div className="h-64 flex flex-col items-center justify-center text-slate-600 italic">
             <span className="text-5xl mb-4">🪹</span>
@@ -225,6 +262,7 @@ const Watchlists = () => {
                   </div>
 
                   <div className="absolute top-2 right-2 flex flex-col items-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-20">
+                    {/* 移动到其他列表下拉框 */}
                     {lists.length > 1 && (
                       <select
                         onChange={(e) => handleMove(movie.id, e.target.value)}
@@ -245,6 +283,7 @@ const Watchlists = () => {
                     )}
 
                     <div className="flex gap-2 mt-1">
+                      {/* 标记已看按钮 */}
                       <button
                         onClick={() =>
                           toggleWatchedStatus(activeListId, movie.id)
@@ -260,6 +299,7 @@ const Watchlists = () => {
                         👁️
                       </button>
 
+                      {/* 删除电影按钮 */}
                       <button
                         onClick={() =>
                           removeFromList(activeListId, movie.id).then(() =>
