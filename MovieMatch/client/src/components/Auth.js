@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const Auth = ({ onLoginSuccess }) => {
-  const [isLogin, setIsLogin] = useState(true); // 切换登录/注册状态
+  const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -28,7 +28,7 @@ const Auth = ({ onLoginSuccess }) => {
 
         onLoginSuccess(user);
       } else {
-        alert("🎉 注册成功！请登录。");
+        alert("🎉 Sign up Successfully, Please Log in!");
         setIsLogin(true);
         setPassword("");
       }
