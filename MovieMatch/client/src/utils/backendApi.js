@@ -70,3 +70,13 @@ export const toggleLikeWatchlist = async (listId) => {
   const response = await api.put(`/community/watchlists/${listId}/like`);
   return response.data;
 };
+
+export const renameWatchlist = async (id, name) => {
+  const response = await api.put(`/watchlists/${id}/rename`, { name });
+  return response.data;
+};
+
+export const deleteWatchlist = async (id) => {
+  const response = await api.delete(`/watchlists/${id}`);
+  return response.data;
+};

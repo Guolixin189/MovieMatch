@@ -64,7 +64,7 @@ const Swipe = () => {
         await addToWatchlist(movieToSave);
       } catch (error) {
         if (error.response?.status === 400)
-          alert("😅 这部电影已经在你的收藏夹里啦！");
+          alert("This movie is already in your watchlist!");
       }
     }
     setCurrentIndex((prev) => prev + 1);

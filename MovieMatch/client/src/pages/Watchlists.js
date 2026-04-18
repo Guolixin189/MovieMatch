@@ -7,6 +7,8 @@ import {
   removeFromList,
   toggleWatchedStatus,
   toggleShareWatchlist,
+  renameWatchlist,
+  deleteWatchlist,
 } from "../utils/backendApi";
 
 const Watchlists = () => {
@@ -66,6 +68,48 @@ const Watchlists = () => {
       fetchMovies(activeListId);
     } catch (err) {
       alert("Move failed");
+    }
+  };
+
+  const handleRenameList = async (id, currentName) => {
+    if (currentName === "My Watchlist") {
+      alert("❌ You cannot rename the default 'My Watchlist'.");
+      return;
+    }
+
+    const newName = prompt("Enter new name for the watchlist:", currentName);
+    if (!newName || newName.trim() === "") return;
+
+    try {
+      await renameWatchlist(id, newName);
+      alert("✅ Watchlist renamed successfully!");
+      loadInitialData();
+    } catch (error) {
+      console.error(error);
+      alert("❌ Failed to rename watchlist.");
+    }
+  };
+
+  const handleDeleteList = async (id, currentName) => {
+    if (currentName === "My Watchlist") {
+      alert("❌ You cannot delete the default 'My Watchlist'.");
+      return;
+    }
+
+    if (
+      !window.confirm(
+        "Are you sure you want to delete this watchlist? This action cannot be undone.",
+      )
+    )
+      return;
+
+    try {
+      await deleteWatchlist(id);
+      alert("✅ Watchlist deleted successfully!");
+      loadInitialData();
+    } catch (error) {
+      console.error(error);
+      alert("❌ Failed to delete watchlist.");
     }
   };
 
