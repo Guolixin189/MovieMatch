@@ -298,6 +298,53 @@ app.put("/api/community/watchlists/:id/like", protect, async (req, res) => {
   }
 });
 
+app.put("/api/watchlists/:id/rename", protect, async (req, res) => {
+  const { name } = req.body;
+  try {
+    const list = await Watchlist.findOne({
+      _id: req.params.id,
+      owner: req.user.userId,
+    });
+
+    if (!list)
+      return res.status(404).json({ message: "Cannot find watchlist" });
+    if (list.name === "My Watchlist")
+      return res
+        .status(400)
+        .json({ message: "Cannot rename the default watchlist" });
+
+    list.name = name;
+    await list.save();
+
+    res.json(list);
+  } catch (error) {
+    res.status(500).json({ error: "Fail to rename watchlist" });
+  }
+});
+
+app.delete("/api/watchlists/:id", protect, async (req, res) => {
+  try {
+    const list = await Watchlist.findOne({
+      _id: req.params.id,
+      owner: req.user.userId,
+    });
+
+    if (!list)
+      return res.status(404).json({ message: "Cannot find watchlist" });
+    if (list.name === "My Watchlist")
+      return res
+        .status(400)
+        .json({ message: "Cannot delete the default watchlist" });
+
+    // 完全删除该清单
+    await Watchlist.deleteOne({ _id: req.params.id });
+
+    res.json({ message: "Watchlist deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Fail to delete watchlist" });
+  }
+});
+
 const PORT = process.env.PORT || 5001;
 const MONGO_URI = process.env.MONGO_URI;
 
