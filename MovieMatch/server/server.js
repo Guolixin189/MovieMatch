@@ -139,34 +139,49 @@ app.post("/api/watchlist", protect, async (req, res) => {
 });
 
 app.post("/api/watchlists/move", protect, async (req, res) => {
-  const { movieId, fromListId, toListId } = req.body;
   try {
+    const { fromListId, toListId, movieId } = req.body;
+
+    if (!fromListId || !toListId || !movieId) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
     const fromList = await Watchlist.findById(fromListId);
     const toList = await Watchlist.findById(toListId);
 
-    if (!fromList || !toList)
-      return res.status(404).json({ message: "Watchlist Does Not Exist" });
-
-    const movieIndex = fromList.movies.findIndex((m) => m.id === movieId);
-    if (movieIndex === -1)
-      return res.status(404).json({ message: "Movie Not in Watchlist" });
-
-    const [movieToMove] = fromList.movies.splice(movieIndex, 1);
-
-    if (toList.movies.find((m) => m.id === movieId)) {
-      return res
-        .status(400)
-        .json({ message: "Movie Already Exist in Target Watchlist" });
+    if (!fromList || !toList) {
+      return res.status(404).json({ message: "Watchlist not found" });
     }
 
+    const currentUserId = String(req.user.userId);
+
+    if (
+      String(fromList.owner) !== currentUserId ||
+      String(toList.owner) !== currentUserId
+    ) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    const movieIndex = fromList.movies.findIndex(
+      (m) => String(m._id) === String(movieId) || String(m.id) === String(movieId)
+    );
+
+    if (movieIndex === -1) {
+      return res.status(404).json({ message: "Movie not found in source watchlist" });
+    }
+
+    const movieToMove = fromList.movies[movieIndex];
+
+    fromList.movies.splice(movieIndex, 1);
     toList.movies.push(movieToMove);
 
     await fromList.save();
     await toList.save();
 
-    res.json({ message: "Move Success" });
-  } catch (error) {
-    res.status(500).json({ error: "Move Fail" });
+    res.json({ message: "Movie moved successfully" });
+  } catch (err) {
+    console.error("Move movie error:", err);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
@@ -184,22 +199,40 @@ app.get("/api/watchlists/:id", protect, async (req, res) => {
   }
 });
 
-app.delete(
-  "/api/watchlists/:listId/movie/:movieId",
-  protect,
-  async (req, res) => {
-    try {
-      const list = await Watchlist.findById(req.params.listId);
-      list.movies = list.movies.filter(
-        (m) => m.id !== parseInt(req.params.movieId),
-      );
-      await list.save();
-      res.json({ message: "Delete Success" });
-    } catch (error) {
-      res.status(500).json({ error: "Delete Fail" });
+app.delete("/api/watchlists/:listId/movie/:movieId", protect, async (req, res) => {
+  try {
+    const { listId, movieId } = req.params;
+
+    const list = await Watchlist.findById(listId);
+
+    if (!list) {
+      return res.status(404).json({ message: "Watchlist not found" });
     }
-  },
-);
+
+    const currentUserId = String(req.user.userId);
+
+    if (String(list.owner) !== currentUserId) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    const originalLength = list.movies.length;
+
+    list.movies = list.movies.filter(
+      (m) => String(m._id) !== String(movieId) && String(m.id) !== String(movieId)
+    );
+
+    if (list.movies.length === originalLength) {
+      return res.status(404).json({ message: "Movie not found in watchlist" });
+    }
+
+    await list.save();
+
+    res.json({ message: "Movie removed successfully" });
+  } catch (err) {
+    console.error("Delete movie error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 app.put(
   "/api/watchlists/:listId/movies/:movieId/watched",
