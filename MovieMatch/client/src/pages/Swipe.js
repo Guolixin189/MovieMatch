@@ -11,22 +11,6 @@ const Swipe = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [movieDetails, setMovieDetails] = useState(null);
 
-  //   useEffect(() => {
-  //     const fetchMovies = async () => {
-  //       try {
-  //         const response = await axios.get(
-  //           `https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=${TMDB_API_KEY}`,
-  //         );
-  //         setMovies(response.data.results);
-  //       } catch (error) {
-  //         console.error(error);
-  //       } finally {
-  //         setIsLoading(false);
-  //       }
-  //     };
-  //     fetchMovies();
-  //   }, []);
-
   useEffect(() => {
     const fetchMovies = async () => {
       try {
