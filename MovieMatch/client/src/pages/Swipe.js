@@ -43,7 +43,7 @@ const Swipe = () => {
             fetchUrl += `&with_genres=${prefs.genre}`;
           }
           if (prefs.year) {
-            fetchUrl += `&primary_release_year=${prefs.year}`;
+            fetchUrl += `&primary_release_date.gte=${prefs.year}-01-01`;
           }
           if (prefs.rating) {
             fetchUrl += `&vote_average.gte=${prefs.rating}`;

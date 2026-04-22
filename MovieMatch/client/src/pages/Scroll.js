@@ -166,7 +166,9 @@ const Scroll = () => {
           fetchUrl = `https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=${TMDB_API_KEY}`;
 
           if (prefs.genre) fetchUrl += `&with_genres=${prefs.genre}`;
-          if (prefs.year) fetchUrl += `&primary_release_year=${prefs.year}`;
+          if (prefs.year) {
+            fetchUrl += `&primary_release_date.gte=${prefs.year}-01-01`;
+          }
           if (prefs.rating) fetchUrl += `&vote_average.gte=${prefs.rating}`;
         }
 
