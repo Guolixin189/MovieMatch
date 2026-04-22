@@ -11,19 +11,54 @@ const Swipe = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [movieDetails, setMovieDetails] = useState(null);
 
+  //   useEffect(() => {
+  //     const fetchMovies = async () => {
+  //       try {
+  //         const response = await axios.get(
+  //           `https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=${TMDB_API_KEY}`,
+  //         );
+  //         setMovies(response.data.results);
+  //       } catch (error) {
+  //         console.error(error);
+  //       } finally {
+  //         setIsLoading(false);
+  //       }
+  //     };
+  //     fetchMovies();
+  //   }, []);
+
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const response = await axios.get(
-          `https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=${TMDB_API_KEY}`,
-        );
+        setIsLoading(true);
+        const prefsString = localStorage.getItem("mm_prefs");
+        const prefs = prefsString ? JSON.parse(prefsString) : {};
+        let fetchUrl = "";
+        if (prefs.natural && prefs.natural.trim() !== "") {
+          fetchUrl = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(prefs.natural)}&api_key=${TMDB_API_KEY}`;
+        } else {
+          fetchUrl = `https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=${TMDB_API_KEY}`;
+
+          if (prefs.genre) {
+            fetchUrl += `&with_genres=${prefs.genre}`;
+          }
+          if (prefs.year) {
+            fetchUrl += `&primary_release_year=${prefs.year}`;
+          }
+          if (prefs.rating) {
+            fetchUrl += `&vote_average.gte=${prefs.rating}`;
+          }
+        }
+
+        const response = await axios.get(fetchUrl);
         setMovies(response.data.results);
       } catch (error) {
-        console.error(error);
+        console.error("Fetch Movies Error:", error);
       } finally {
-        setIsLoading(false);
+        if (typeof setIsLoading === "function") setIsLoading(false);
       }
     };
+
     fetchMovies();
   }, []);
 

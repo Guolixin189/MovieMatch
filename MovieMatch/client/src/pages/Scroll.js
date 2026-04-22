@@ -117,17 +117,77 @@ const ScrollMovieCard = ({ movie }) => {
   );
 };
 
+// const Scroll = () => {
+//   const [movies, setMovies] = useState([]);
+//   useEffect(() => {
+//     const fetchMovies = async () => {
+//       const response = await axios.get(
+//         `https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&page=2&api_key=${TMDB_API_KEY}`,
+//       );
+//       setMovies(response.data.results);
+//     };
+//     fetchMovies();
+//   }, []);
+
+//   return (
+//     <div className="h-full overflow-y-auto p-6 scroll-smooth">
+//       <div className="max-w-7xl mx-auto">
+//         <h2 className="text-2xl font-bold text-slate-200 mb-6 border-b border-slate-800 pb-2">
+//           Discover New Movies
+//         </h2>
+//         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+//           {movies.map((movie) => (
+//             <ScrollMovieCard key={movie.id} movie={movie} />
+//           ))}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+// export default Scroll;
+
 const Scroll = () => {
   const [movies, setMovies] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const fetchMovies = async () => {
-      const response = await axios.get(
-        `https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&page=2&api_key=${TMDB_API_KEY}`,
-      );
-      setMovies(response.data.results);
+      try {
+        setIsLoading(true);
+
+        const prefsString = localStorage.getItem("mm_prefs");
+        const prefs = prefsString ? JSON.parse(prefsString) : {};
+
+        let fetchUrl = "";
+
+        if (prefs.natural && prefs.natural.trim() !== "") {
+          fetchUrl = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(prefs.natural)}&api_key=${TMDB_API_KEY}`;
+        } else {
+          fetchUrl = `https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=${TMDB_API_KEY}`;
+
+          if (prefs.genre) fetchUrl += `&with_genres=${prefs.genre}`;
+          if (prefs.year) fetchUrl += `&primary_release_year=${prefs.year}`;
+          if (prefs.rating) fetchUrl += `&vote_average.gte=${prefs.rating}`;
+        }
+
+        const response = await axios.get(fetchUrl);
+        setMovies(response.data.results);
+      } catch (error) {
+        console.error("Fetch Scroll Movies Error:", error);
+      } finally {
+        setIsLoading(false);
+      }
     };
     fetchMovies();
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className="h-full flex flex-col items-center justify-center p-6 text-yellow-500 text-xl font-bold">
+        <div className="animate-pulse">Loading Your Preferences...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="h-full overflow-y-auto p-6 scroll-smooth">
