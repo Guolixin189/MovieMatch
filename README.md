@@ -82,43 +82,6 @@ The project stores data in MongoDB using Mongoose models.
 
 This allows the database to store users, watchlists, saved movie IDs, and watched status as required by the rubric.
 
-## How to Run the Project Locally
-
-### Server
-
-Open a terminal and run:
-
-```bash
-cd MovieMatch/server
-npm install
-npm start
-```
-### Client
-
-Open another terminal and run:
-
-```bash
-cd MovieMatch/client
-npm install
-npm start
-```
-
-## Environment Variables
-
-Create a `.env` file inside `MovieMatch/server/` with the following variables:
-
-```env
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-PORT=5001
-```
-
-## Notes
-
-- Users can create their own account, so no pre-made login is required.
-- The project uses the TMDB API for real movie data.
-- If running the project fully locally, the backend URL in `client/src/utils/backendApi.js` may need to be adjusted depending on your environment.
-
 ## Rubric
 
 Approved by Cheng
@@ -144,6 +107,14 @@ Approved by Cheng
 ### Best Practices (5 points)
 - 3 - Code is readable and well-formatted
 - 2 - All pages pass the HTML validator
+
+## Creative Portion
+
+For the creative portion, we wanted to make the project feel more interactive than a standard movie watchlist app.
+
+One feature we added is a **swipe-style movie discovery page**. Instead of only using a regular scrolling page, users can browse movies in a more engaging way and quickly decide whether they are interested in a movie or want to move on to the next one.
+
+We also added a **public channel** feature. Users can publish their watchlists for others to browse, and other users can like those public watchlists.
 
 # AI Reflection
 
