@@ -5,6 +5,7 @@ This file records the main AI-assisted prompts used during the development and r
 ## Tool Used
 
 - ChatGPT
+- Gemini 
 
 ---
 
