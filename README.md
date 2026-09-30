@@ -7,7 +7,9 @@ Nachuan Ding 605549 Section02 dingn0823
 
 ## Project Link
 
-http://3.16.67.55/
+**Live Demo:** https://movie-match-eight-omega.vercel.app/
+
+**Backend API:** https://moviematch-7156.onrender.com
 
 ## Overview
 
