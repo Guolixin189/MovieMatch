@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { login as apiLogin, signup as apiSignup } from "../utils/backendApi";
 
 const Auth = ({ onLoginSuccess }) => {
   const [isLogin, setIsLogin] = useState(true);
@@ -13,16 +13,13 @@ const Auth = ({ onLoginSuccess }) => {
     setError("");
     setIsLoading(true);
 
-    const endpoint = isLogin ? "/api/auth/login" : "/api/auth/signup";
-
     try {
-      const response = await axios.post(endpoint, {
-        username,
-        password,
-      });
+      const data = isLogin
+        ? await apiLogin(username, password)
+        : await apiSignup(username, password);
 
       if (isLogin) {
-        const { token, user } = response.data;
+        const { token, user } = data;
         localStorage.setItem("mm_token", token);
         localStorage.setItem("mm_user", JSON.stringify(user));
 
